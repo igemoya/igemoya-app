@@ -2,6 +2,7 @@
   import { Router, Route } from "svelte-routing";
   import Main from "./routes/Index.svelte";
   import OAuth from "./routes/oauth/Index.svelte";
+  import Logout from "./routes/oauth/Logout.svelte";
   import App from "./routes/app/Index.svelte";
 
   export let url = "";
@@ -13,6 +14,7 @@
     <Route path="/"><Main /></Route>
     <!-- /oauth -->
     <Route path="/oauth"><OAuth /></Route>
+    <Route path="/oauth/logout"><Logout /></Route>
     <!-- /app -->
     <Route path="/app"><App /></Route>
   </div>
