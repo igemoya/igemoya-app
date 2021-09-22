@@ -35,6 +35,7 @@
 
 <style>
   #navbarContainer {
+    background-color: #fff;
     position: absolute;
     bottom: env(safe-area-inset-bottom);
     left: 0;
@@ -46,8 +47,8 @@
   }
 
   img {
-    min-width: 10vw;
-    max-height: 3vh;
+    max-width: 4vh;
+    max-height: 6vw;
   }
   
   .navbar30 {
