@@ -10,6 +10,19 @@
     profile_image: ""
   };
 
+  const takePhoto = () => {
+    let video = document.getElementById("webcam");
+    let width = video.videoWidth;
+    let height = video.videoHeight;
+    let canvas = document.getElementById("picture");
+    let context = canvas.getContext('2d');
+    canvas.width = width;
+    canvas.height = height;
+    context.drawImage(video, 0, 0, width, height);
+    // let data = canvas.toDataURL('image/png');
+    // console.log(data);
+  };
+
   axios.get('https://igemoya-backend.herokuapp.com/user/me', {
     headers: {
       authorization: `Bearer ${localStorage.jwt}`
@@ -35,17 +48,20 @@
 </script>
 
 <main>
-  <!-- svelte-ignore a11y-media-has-caption -->
   <div id="floatingInfoContainer">
     <div id="floatingInfo"><span class="w700">사진을 찍고 궁금한 부분을 터치</span>하세요.</div>
   </div>
+  <!-- svelte-ignore a11y-media-has-caption -->
   <div id="videoContainer">
     <video id="webcam" height={height} playsinline autoplay></video>
+  </div>
+  <div id="pictureContainer">
+    <canvas id="picture"></canvas>
   </div>
   <div id="bottomToolsContainer">
     <div class="bar30"></div>
     <div class="bar40">
-      <div id="cameraButton">
+      <div id="cameraButton" on:click={takePhoto}>
         <div id="cameraInner">
           <div id="cameraMoreInner"></div>
         </div>
@@ -63,6 +79,7 @@
   }
 
   #floatingInfo {
+    margin-top: 3vh;
     color: #000;
     font-size: 1.5vh;
     filter: drop-shadow(0 0 15px rgba(20, 20, 20, 0.2));
@@ -145,5 +162,20 @@
     width: 5vh;
     height: 5vh;
     border-radius: 5vh;
+  }
+
+  #pictureContainer {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: calc(92vh - env(safe-area-inset-bottom));
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  #picture {
+    height: calc(92vh - env(safe-area-inset-bottom));
   }
 </style>
