@@ -4,6 +4,7 @@
   import OAuth from "./routes/oauth/Index.svelte";
   import Logout from "./routes/oauth/Logout.svelte";
   import App from "./routes/application/Index.svelte";
+  import Camera from "./routes/application/Camera.svelte";
   import NotFound from "./routes/NotFound.svelte";
 
   export let url = "";
@@ -18,6 +19,7 @@
     <Route path="/oauth/logout"><Logout /></Route>
     <!-- /app -->
     <Route path="/app"><App /></Route>
+    <Route path="/app/camera"><Camera /></Route>
     <!-- 404 -->
     <Route path=""><NotFound /></Route>
   </div>
