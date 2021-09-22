@@ -43,11 +43,43 @@
 </script>
 
 <main>
+  <div id="topContainer">
+    <div id="topNameContainer">
+      {#if me.username}
+        <span><span class="w800">{me.username}</span>님 환영합니다!</span>
+        <img src="{me.profile_image}" alt="" id="profileImage">
+      {/if}
+    </div>
+  </div>
 </main>
 
 <style>
   main {
     width: 100vw;
     height: 100vh;
+  }
+
+  #topContainer {
+    width: 100vw;
+    height: 20vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    background-color: #007CFB;
+  }
+
+  #topNameContainer {
+    color: white;
+    font-size: 3vh;
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2vh 4vw;
+  }
+
+  #profileImage {
+    height: 7vh;
+    border-radius: 5vh;
   }
 </style>
