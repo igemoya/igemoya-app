@@ -4,6 +4,7 @@
   import OAuth from "./routes/oauth/Index.svelte";
   import Logout from "./routes/oauth/Logout.svelte";
   import App from "./routes/application/Index.svelte";
+  import NotFound from "./routes/NotFound.svelte";
 
   export let url = "";
 </script>
@@ -17,14 +18,25 @@
     <Route path="/oauth/logout"><Logout /></Route>
     <!-- /app -->
     <Route path="/app"><App /></Route>
+    <!-- 404 -->
+    <Route path=""><NotFound /></Route>
   </div>
 </Router>
 
 <style>
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css");
 
-:global(body) {
+div {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+:global(body) {
   font-family: "Pretendard Variable";
   padding: 0;
   margin: 0;
