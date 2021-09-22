@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { navigate } from "svelte-routing";
   import "../@type/index.d.ts";
   
   if(!Kakao.Auth) {
@@ -9,6 +10,10 @@
     Kakao.Auth.authorize({
       redirectUri: 'https://ige-app.coupy.dev/oauth'
     });
+  };
+
+  document.body.onload = () => {
+    if(localStorage.jwt) navigate("/app", { replace: true });
   };
 </script>
 
@@ -23,14 +28,9 @@
 </main>
 
 <style>
-  :root {
-    --app-height: 100%;
-  }
-
   main {
     width: 100vw;
     height: 100vh;
-    height: var(--app-height);
     display: flex;
     flex-direction: column;
     align-items: center;
