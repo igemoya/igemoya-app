@@ -36,6 +36,16 @@ div {
   overflow-y: hidden;
 }
 
+:global(*) {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+:global(a) {
+  line-height: 0;
+}
+
 :global(body) {
   font-family: "Pretendard Variable";
   padding: 0;
