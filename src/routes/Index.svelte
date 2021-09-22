@@ -1,20 +1,15 @@
 <script lang="ts">
   import "../@type/index.d.ts";
   
-  if(!Kakao.Auth) Kakao.init("f246de8d71e0c8320cb967a7361ae9fe");
+  if(!Kakao.Auth) {
+    Kakao.init("f246de8d71e0c8320cb967a7361ae9fe");
+  }
 
   const loginWithKakao = () => {
     Kakao.Auth.authorize({
       redirectUri: 'https://ige-app.coupy.dev/oauth'
     });
   };
-
-  const appHeight = () => {
-    const doc = document.documentElement;
-    doc.style.setProperty('--app-height', `${window.innerHeight}px`);
-  }
-  window.addEventListener('resize', appHeight);
-  appHeight();
 </script>
 
 <main>
