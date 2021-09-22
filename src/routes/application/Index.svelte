@@ -51,6 +51,15 @@
       {/if}
     </div>
   </div>
+  <div class="contentsContainer">
+    <span class="contentsTitle">지금 <span class="w800">경복궁</span>에 있으신가요?</span>
+    <div class="contentsInnerContainer">
+      {#each recommends.location.recommends as e}
+        <Recommend title={e.title} src={e.src} id={e.id} />
+      {/each}
+      <div id="contentsRight"></div>
+    </div>
+  </div>
 </main>
 
 <style>
@@ -81,5 +90,25 @@
   #profileImage {
     height: 7vh;
     border-radius: 5vh;
+  }
+
+  .contentsContainer {
+    width: 100vw;
+    padding-top: 4vh;
+  }
+
+  .contentsTitle {
+    font-size: 2.5vh;
+    padding: 0 4vw;
+  }
+
+  .contentsInnerContainer {
+    padding-left: 4vw;
+    overflow-x: scroll;
+    margin-top: 2vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
   }
 </style>
