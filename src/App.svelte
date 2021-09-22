@@ -3,7 +3,7 @@
   import Main from "./routes/Index.svelte";
   import OAuth from "./routes/oauth/Index.svelte";
   import Logout from "./routes/oauth/Logout.svelte";
-  import App from "./routes/app/Index.svelte";
+  import App from "./routes/application/Index.svelte";
 
   export let url = "";
 </script>
