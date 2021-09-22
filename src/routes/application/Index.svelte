@@ -1,5 +1,6 @@
 <script lang="ts">
   import Recommend from "../../components/Recommend.svelte";
+  import Navbar from "../../components/Navbar.svelte";
   import { navigate } from "svelte-routing";
   import axios from "axios";
 
@@ -57,9 +58,10 @@
       {#each recommends.location.recommends as e}
         <Recommend title={e.title} src={e.src} id={e.id} />
       {/each}
-      <div id="contentsRight"></div>
+      <div id="contentsRight">&nbsp;</div>
     </div>
   </div>
+  <Navbar selected=0 />
 </main>
 
 <style>
@@ -110,5 +112,9 @@
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
+  }
+
+  #contentsRight {
+    width: 2vw;
   }
 </style>
