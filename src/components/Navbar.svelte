@@ -41,7 +41,7 @@
     left: 0;
     display: flex;
     flex-direction: row;
-    border-top: 1px solid #C6C6C6;
+    border-top: 0.5px solid #e7e7e7;
     width: 100vw;
     height: 8vh;
   }
