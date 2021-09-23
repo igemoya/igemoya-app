@@ -15,7 +15,9 @@
     "6149600255f0c6001de57cf9": "geunjeongjeon"
   };
 
-  let items = [];
+  let barOpened = false;
+
+  let objects = [];
 
   const loadingShow = () => {
     document.getElementById("loadingContainer").classList.remove("hide");
@@ -26,9 +28,21 @@
   };
 
   const plusClicked = (n) => {
-    console.log(items[n]);
     if(document.getElementsByClassName("selected").length) document.getElementsByClassName("selected")[0].classList.remove("selected");
     document.getElementsByClassName("plusIcon")[n].classList.add("selected");
+    document.getElementById("subTitleText").textContent = objects[n].name;
+    document.getElementById("explainText").textContent = objects[n].description;
+  };
+
+  const barClicked = () => {
+    if(barOpened) {
+      document.getElementById("bottomExplainContainer").style.marginBottom = "-80vh";
+      document.getElementById("floatingInfoContainer").classList.add("show");
+    } else {
+      document.getElementById("bottomExplainContainer").style.marginBottom = "0vh";
+      document.getElementById("floatingInfoContainer").classList.remove("show");
+    }
+    barOpened = !barOpened;
   };
 
   const takePhoto = () => {
@@ -62,6 +76,8 @@
           },
         }
       }).then((res) => {
+        document.getElementById("titleText").textContent = res.data.result.name;
+        document.getElementById("explainText").textContent = res.data.result.description;
         const id = res.data.result._id;
         const api = "https://pdg916.pythonanywhere.com";
         canvas.toBlob((blob) => {
@@ -74,7 +90,7 @@
           .then((res) => {
             let innerElement = "";
             let unique = new Set();
-            items = [];
+            objects = [];
             res.data.forEach(element => {
               if(!unique.has(element.name)) {
                 axios.get(`https://igemoya-backend.herokuapp.com/exhibition-info/object/${element.name}`, {
@@ -82,7 +98,7 @@
                     authorization: `Bearer ${localStorage.jwt}`
                   }
                 }).then((res) => {
-                  items.push(res.data.object);
+                  objects.push(res.data.object);
                 }).catch(() => {
                   navigate('/oauth/logout', { replace: true });
                 });
@@ -103,6 +119,7 @@
                 plusClicked(i);
               });
             }
+            document.getElementById("bottomExplainContainer").classList.remove("hide");
             loadingHide();
           });
         });
@@ -139,7 +156,7 @@
 
 <main>
   <div id="loadingContainer" class="hide">로딩중..</div>
-  <div id="floatingInfoContainer">
+  <div id="floatingInfoContainer" class="show">
     <div id="floatingInfo"><span class="w700">사진을 찍고 궁금한 부분을 터치</span>하세요.</div>
   </div>
   <!-- svelte-ignore a11y-media-has-caption -->
@@ -161,6 +178,17 @@
       </div>
     </div>
     <div class="bar30"></div>
+  </div>
+  <div id="bottomExplainContainer" class="hide">
+    <div id="bottomBar" on:click={barClicked}></div>
+    <div id="bottomTitle">
+      <span id="titleText" class="w800"></span>
+      &nbsp;
+      <span id="subTitleText" class="w400"></span>
+    </div>
+    <div id="bottomExplain">
+      <span id="explainText"></span>
+    </div>
   </div>
   <Navbar selected=1 />
 </main>
@@ -202,7 +230,13 @@
     color: #007CFB;
   }
 
+  #floatingInfoContainer.show {
+    opacity: 1;
+  }
+
   #floatingInfoContainer {
+    opacity: 0;
+    pointer-events: none;
     z-index: 3;
     display: flex;
     width: 100vw;
@@ -211,6 +245,7 @@
     left: 0;
     top: env(safe-area-inset-top);
     position: fixed;
+    transition-duration: .5s;
   }
 
   .videoContainer {
@@ -234,6 +269,10 @@
     margin-bottom: 0vh;
   }
 
+  #bottomExplainContainer.hide {
+    margin-bottom: -92vh;
+  }
+
   #bottomToolsContainer {
     margin-bottom: -12vh;
     transition-duration: .5s;
@@ -245,6 +284,23 @@
     display: flex;
     flex-direction: row;
     height: 12vh;
+  }
+
+  #bottomExplainContainer {
+    margin-bottom: -80vh;
+    transition-duration: .5s;
+    background-color: #fff;
+    position: absolute;
+    bottom: calc(8vh + env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 90vw;
+    height: 92vh;
+    border-radius: 2em 2em 0 0;
+    padding-left: 5vw;
+    padding-right: 5vw;
   }
 
   video {
@@ -304,9 +360,7 @@
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
+    height: calc(92vh - env(safe-area-inset-bottom));
     background-color: rgba(20, 20, 20, 0.5);
     font-size: 3vh;
     font-weight: 600;
@@ -318,5 +372,31 @@
   #loadingContainer.hide {
     pointer-events: none;
     opacity: 0;
+  }
+
+  #bottomBar {
+    background-color: #DBDBDB;
+    border-radius: 1vh;
+    width: 20vw;
+    height: 6px;
+    margin-top: 2vh;
+  }
+
+  #bottomTitle {
+    display: flex;
+    width: 100%;
+    height: calc(10vh - 6px);
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 3.5vh;
+  }
+
+  #bottomExplain {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+    justify-content: flex-start;
+    font-size: 2.3vh;
   }
 </style>
