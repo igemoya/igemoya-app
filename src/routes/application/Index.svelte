@@ -48,6 +48,26 @@
           "id": "89ac5fv2br"
         }
       ]
+    },
+    "around": {
+      "title": "경복궁",
+      "recommends": [
+        {
+          "title": "현판의 비밀",
+          "src": "https://www.cha.go.kr/unisearch/imagefiles/newsfile/20100216/VC3K9851.jpg",
+          "id": "89ac5fv2br"
+        },
+        {
+          "title": "현판의 비밀",
+          "src": "https://www.cha.go.kr/unisearch/imagefiles/newsfile/20100216/VC3K9851.jpg",
+          "id": "89ac5fv2br"
+        },
+        {
+          "title": "현판의 비밀",
+          "src": "https://www.cha.go.kr/unisearch/imagefiles/newsfile/20100216/VC3K9851.jpg",
+          "id": "89ac5fv2br"
+        }
+      ]
     }
   };
 </script>
@@ -66,6 +86,15 @@
     <span class="contentsTitle">지금 <span class="w800">경복궁</span>에 있으신가요?</span>
     <div class="contentsInnerContainer">
       {#each recommends.location.recommends as e}
+        <Recommend title={e.title} src={e.src} id={e.id} />
+      {/each}
+      <div id="contentsRight">&nbsp;</div>
+    </div>
+  </div>
+  <div class="contentsContainer">
+    <span class="contentsTitle"><span class="w800">{me.username}님 주변</span> 살펴보기</span>
+    <div class="contentsInnerContainer">
+      {#each recommends.around.recommends as e}
         <Recommend title={e.title} src={e.src} id={e.id} />
       {/each}
       <div id="contentsRight">&nbsp;</div>
