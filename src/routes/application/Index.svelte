@@ -19,6 +19,15 @@
     navigate('/oauth/logout', { replace: true });
   });
 
+  navigator.geolocation.getCurrentPosition((position) => {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+  }, () => {
+    alert('Unable to retrieve location');
+  });
+
   const recommends = {
     "location": {
       "title": "경복궁",
@@ -72,7 +81,7 @@
 
   #topContainer {
     width: 100vw;
-    height: 20vh;
+    height: 22vh;
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -90,6 +99,8 @@
   }
 
   #profileImage {
+    object-fit: cover;
+    width: 7vh;
     height: 7vh;
     border-radius: 5vh;
   }
