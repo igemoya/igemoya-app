@@ -15,6 +15,8 @@
     "6149600255f0c6001de57cf9": "geunjeongjeon"
   };
 
+  let items = [];
+
   const loadingShow = () => {
     document.getElementById("loadingContainer").classList.remove("hide");
   };
@@ -23,9 +25,15 @@
     document.getElementById("loadingContainer").classList.add("hide");
   };
 
+  const plusClicked = (n) => {
+    console.log(items[n]);
+    if(document.getElementsByClassName("selected").length) document.getElementsByClassName("selected")[0].classList.remove("selected");
+    document.getElementsByClassName("plusIcon")[n].classList.add("selected");
+  };
+
   const takePhoto = () => {
-    // loadingShow();
-    // document.getElementById("bottomToolsContainer").classList.remove("show");
+    loadingShow();
+    document.getElementById("bottomToolsContainer").classList.remove("show");
     let video = document.getElementById("webcam");
     let width = video.videoWidth;
     let height = video.videoHeight;
@@ -36,49 +44,74 @@
     context.drawImage(video, 0, 0, width, height);
     document.getElementById("image").src = canvas.toDataURL();
 
-    // navigator.geolocation.getCurrentPosition((position) => {
-    //   const latitude = position.coords.latitude;
-    //   const longitude = position.coords.longitude;
+    navigator.geolocation.getCurrentPosition((position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
 
-    //   axios('https://igemoya-backend.herokuapp.com/image-search/image-search', {
-    //     method: 'post',
-    //     headers: {
-    //       authorization: `Bearer ${localStorage.jwt}`
-    //     },
-    //     data: {
-    //       location: {
-    //         type: "Point",
-    //         coordinates: [
-    //           37.582442541038596, 126.97410541810576
-    //         ]
-    //       },
-    //     }
-    //   }).then((res) => {
-    //     const id = res.data.result._id;
-    //     const api = "https://pdg916.pythonanywhere.com";
-    //     canvas.toBlob((blob) => {
-    //       const formData = new FormData();
-    //       formData.append('image', blob, 'image.png');
-    //       formData.append('place', idToName[id]);
+      axios('https://igemoya-backend.herokuapp.com/image-search/image-search', {
+        method: 'post',
+        headers: {
+          authorization: `Bearer ${localStorage.jwt}`
+        },
+        data: {
+          location: {
+            type: "Point",
+            coordinates: [
+              37.57755999577882, 126.97674003790465
+            ]
+          },
+        }
+      }).then((res) => {
+        const id = res.data.result._id;
+        const api = "https://pdg916.pythonanywhere.com";
+        canvas.toBlob((blob) => {
+          const formData = new FormData();
+          formData.append('image', blob, 'image.png');
+          formData.append('place', idToName[id]);
 
-    //       // Post via axios or other transport method
-    //       axios.post(`${api}/igemoya/v1/object-detection`, formData)
-    //       .then((res) => {
-    //         const r = window.innerWidth / 10;
-    //         res.data.forEach(element => {
-    //           const x = Math.round((element.xmin + element.xmax) / 2);
-    //           const y = Math.round((element.ymin + element.ymax) / 2);
-    //           console.log(x, y);
-    //         });
-    //         loadingHide();
-    //       });
-    //     });
-    //   }).catch(() => {
-    //     alert("Error occured.");
-    //   });
-    // }, () => {
-    //   alert('Unable to retrieve location');
-    // });
+          // Post via axios or other transport method
+          axios.post(`${api}/igemoya/v1/object-detection`, formData)
+          .then((res) => {
+            let innerElement = "";
+            let unique = new Set();
+            items = [];
+            res.data.forEach(element => {
+              if(!unique.has(element.name)) {
+                axios.get(`https://igemoya-backend.herokuapp.com/exhibition-info/object/${element.name}`, {
+                  headers: {
+                    authorization: `Bearer ${localStorage.jwt}`
+                  }
+                }).then((res) => {
+                  items.push(res.data.object);
+                }).catch(() => {
+                  navigate('/oauth/logout', { replace: true });
+                });
+                unique.add(element.name);
+                const x = Math.round((element.xmin + element.xmax) / 2);
+                const y = Math.round((element.ymin + element.ymax) / 2);
+                const rate = window.innerHeight / height * 0.92;
+                const correction = window.innerWidth / 20 > window.innerHeight / 40 ? window.innerHeight / 40 : window.innerWidth / 20;
+                const left = rate * x - correction;
+                const top = rate * y - correction;
+                innerElement += `<div class="plusIcon" style="top: ${top}px; left: ${left}px;">+</div>`;
+              }
+            });
+            document.getElementById("plusContainer").innerHTML = innerElement;
+            let buttons = document.getElementsByClassName("plusIcon");
+            for(let i = 0; i < buttons.length; i++) {
+              buttons[i].addEventListener('click', () => {
+                plusClicked(i);
+              });
+            }
+            loadingHide();
+          });
+        });
+      }).catch(() => {
+        alert("Error occured.");
+      });
+    }, () => {
+      alert('Unable to retrieve location');
+    });
   };
 
   axios.get('https://igemoya-backend.herokuapp.com/user/me', {
@@ -110,11 +143,13 @@
     <div id="floatingInfo"><span class="w700">사진을 찍고 궁금한 부분을 터치</span>하세요.</div>
   </div>
   <!-- svelte-ignore a11y-media-has-caption -->
-  <div id="videoContainer">
+  <div id="videoContainer" class="videoContainer">
     <video id="webcam" height={height} playsinline autoplay></video>
   </div>
-  <div id="imgContainer">
+  <div id="imgContainer" class="videoContainer">
     <img src="" alt="" id="image">
+  </div>
+  <div id="plusContainer" class="videoContainer">
   </div>
   <div id="bottomToolsContainer" class="show">
     <div class="bar30"></div>
@@ -146,7 +181,29 @@
     border-radius: 2vh;
   }
 
+  :global(.plusIcon) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    max-width: 5vh;
+    max-height: 5vh;
+    width: 10vw;
+    height: 10vw;
+    background-color: #007CFBdd;
+    color: white;
+    font-size: 3vh;
+    font-weight: 500;
+    border-radius: 5vw;
+  }
+
+  :global(.selected) {
+    background-color: #ffffffdd;
+    color: #007CFB;
+  }
+
   #floatingInfoContainer {
+    z-index: 3;
     display: flex;
     width: 100vw;
     justify-content: center;
@@ -156,7 +213,7 @@
     position: fixed;
   }
 
-  #videoContainer {
+  .videoContainer {
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -167,10 +224,6 @@
     width: 100vw;
     position: fixed;
     top: 0;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    height: calc(92vh - env(safe-area-inset-bottom));
   }
 
   #image {
