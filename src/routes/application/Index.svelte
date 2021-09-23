@@ -61,6 +61,7 @@
       {/if}
     </div>
   </div>
+  <img src="/images/banner.png" alt="" id="bannerImage">
   <div class="contentsContainer">
     <span class="contentsTitle">지금 <span class="w800">경복궁</span>에 있으신가요?</span>
     <div class="contentsInnerContainer">
@@ -77,6 +78,13 @@
   main {
     width: 100vw;
     height: 100vh;
+  }
+
+  #bannerImage {
+    border: solid 1px #ACACAC;
+    border-radius: 10px;
+    margin: 4vh 4vw 0vh 4vw;
+    width: 92vw;
   }
 
   #topContainer {
